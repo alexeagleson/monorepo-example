@@ -1,7 +1,10 @@
-
 All code from this tutorial as a complete package is available in [this repository](https://github.com/alexeagleson/monorepo-example).
 
-The purpose of this tutorial is to learn about some of the different ways that you can structure a large project that is built from multiple smaller projects.
+Do you work with large or semi-large codebases that are starting to get out of control?  Do you have to deal with multiple different projects that interact with each other and have difficulty keeping versions aligned?  
+
+If you said yes to either of those things (or even if you're just anticipating encountering them in the future) then this tutorial is for you.  
+
+The purpose of this tutorial is to learn about some of the different ways that you can structure a large project which is composed primarily of smaller projects and modules.
 
 ### Monorepos
 
@@ -56,6 +59,8 @@ To start, we need a `packages` directory to hold the different projects in our m
           └── server.ts
       
 From within the `packages/simple-express-app` directory, run:
+```
+
 
 ```bash
 yarn init
