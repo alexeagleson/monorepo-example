@@ -32,6 +32,7 @@ This tutorial will teach you how to create your own project that implements both
 1. [Create the Monorepo](#create-the-monorepo)
 1. [Create Your Repository](#create-y0our-repository)
 1. [Sharing Code and Adding Dependencies](#sharing-code-and-adding-dependencies)
+1. [Create a Shared Package](#create-a-shared-package)
 1. [Add a Git Submodule](#add-a-git-submodule)
 1. [Wrapping Up](#wrapping-up)
 
@@ -474,9 +475,63 @@ Once everything is setup, press the button on your React application and you'll 
 
 ![React Monorepo Fetch Example](https://res.cloudinary.com/dqse2txyi/image/upload/v1639718441/blogs/git-submodules/react-monorepo-fetch_p5hoys.png)
 
-Notice the snake_case response that matches the correct shape we defined.  Fantastic. 
+Notice the snake_case response that matches the correct shape we defined.  Fantastic!
 
-Let's look at git submodules.  
+Now there is one issue with our setup -- currently we are importing the `QueryPayload` directly from our server.  That is fairly harmless, but what if we 
+
+
+## Create a Shared Package
+
+Using the [lerna create](https://github.com/lerna/lerna/tree/main/commands/create#readme) command we can quickly and easily create new projects within our monorepo.  Run the following commands from the root directory:
+
+```bash
+npx lerna create simple-shared-data
+
+npx lerna add typescript --dev
+
+yarn install
+```
+
+This will create a directory called `simple-shared-data` in your `packages`.  We've already added the same version of Typescript as a dev dependency.  
+
+You can remove the `lib` directory that includes the default JS entrypoint as we will not be using it.  
+
+Create an `index.ts` file inside of `packages/simple-shared-data` where we will place any types or data that either our front-end, back-end or both can have access to.  
+
+`packages/simple-shared-data/index.ts`
+```ts
+export interface QueryPayload {
+  payload: string;
+}
+```
+
+And then import from this file in both our server and React app:
+
+`packages/simple-express-server/server.ts`
+```ts
+import { QueryPayload } from 'simple-shared-data';
+...
+```
+
+`packages/simple-react-app/src/App.tsx`
+```tsx
+import { QueryPayload } from 'simple-shared-data';
+...
+```
+
+The benefit of creating this shared project is that your front-end for example won't have a strict dependency on the existence of your server.  You could deploy as:
+
+Front-End
+
+- `simple-react-ap`
+- `simple-shared-data`
+
+Back-End
+
+- `simple-express-server`
+- `simple-shared-data`
+
+Now that we have all these different projects setup, lets take a look at git submodules.
 
 ## Add a Git Submodule
 

@@ -1,0 +1,29 @@
+{
+  "name": "simple-shared-data",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Alex Eagleson <alexeagleson@gmail.com>",
+  "homepage": "https://github.com/alexeagleson/monorepo-example#readme",
+  "license": "ISC",
+  "main": "lib/simple-shared-data.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexeagleson/monorepo-example.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/alexeagleson/monorepo-example/issues"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}

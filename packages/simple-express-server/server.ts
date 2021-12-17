@@ -2,10 +2,7 @@ import express from "express";
 import _ from "lodash";
 const app = express();
 const port = 3001;
-
-export interface QueryPayload {
-  payload: string;
-}
+import { QueryPayload } from 'simple-shared-data';
 
 app.use((_req, res, next) => {
   // Allow any website to connect
