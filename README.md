@@ -504,3 +504,94 @@ In the output you'll see `new file:   ../../../.gitmodules`.  That's something n
 ```
 
 It stores a mapping to the directories in our project that map to other repositories.  
+
+Now if you commit your changes in the root of the monorepo and push, you'll see on Github that rather than being a regular directory inside this project -- it's actually a link to the real repository:
+
+![Github Submodules](https://res.cloudinary.com/dqse2txyi/image/upload/v1639722122/blogs/git-submodules/github-submodule_tel7cc.png)
+
+So you can continue to update and make changes to this monorepo without impacting that other repository.  Great!  
+
+But can you update the dark mode repository from inside this one?  Sure you can!  (As long as you have write permission).
+
+Let's make a trivial change to the dark mode repository from inside this one and see what happens.  Navigate to:
+
+`packages/simple-react-app/src/react-dark-mode/src/DarkMode.css`
+```css
+...
+[data-theme="dark"] {
+  --font-color: #eee;
+  --background-color: #333;
+  --link-color: peachpuff;
+}
+```
+
+I'm going to update the colour of the link when the app is in dark mode, from `lightblue` to `peachpuff`.
+
+Now obviously you won't be able to update my repository, but if you're following you can continue reading to see where this is going (or you can use your own repository of course).
+
+From this directory I make a commit and push.  When I check the repository there are no new commits to the `monorepo-example` repository, but there IS a new commit to `react-dark-mode`.  Even though we are still inside our monorepo project!
+
+![Github Submodule Commit Example](https://res.cloudinary.com/dqse2txyi/image/upload/v1639722643/blogs/git-submodules/github-submodule-2_jyb55y.png)
+
+When working with submodules it's important to keep them up to date.  Remember that other contributors could be making new commits to the submodules.  The regular `git pull` and `git fetch` to your main root monorepo aren't going to automatically pull new changes to submodules.  To do that you need to run:
+
+```bash
+git submodule update
+```
+
+To get the latest updates.  
+
+You also have new command you'll need to run when cloning a project or pulling when new submodules have been added.  When you use `git pull` it will pull the information _about_ relevant submodules, but it won't actually pull the code from them into your repository.  You need to run:
+
+```
+git submodule init
+```
+
+To pull the code for submodules.
+
+Lastly, in case you prefer not to run separate commands, there is a way to pull submodule updates with your regular commands you're already using like clone and pull.  Simply add the `--recurse-submodules` flag like so:
+
+```
+git pull --recurse-submodules
+
+or
+
+git clone --recurse-submodules
+```
+
+## Wrapping Up
+
+I hope you learned something useful about monorepos and submodules.  THere are tons of different ways to setup a new project, and there's no one-size-fits-all answer for every team.
+
+I'd encourage you to play around with small monorepos (even clone this example) and get get comfortable with the different commands.  
+
+
+Please check some of my other learning tutorials.  Feel free to leave a comment or question and share with others if you find any of them helpful:
+
+- [Learnings from React Conf 2021](https://dev.to/alexeagleson/learnings-from-react-conf-2021-17lg)
+
+- [How to Create a Dark Mode Component in React](https://dev.to/alexeagleson/how-to-create-a-dark-mode-component-in-react-3ibg)
+
+- [How to Analyze and Improve your 'Create React App' Production Build ](https://dev.to/alexeagleson/how-to-analyze-and-improve-your-create-react-app-production-build-4f34)
+
+- [How to Create and Publish a React Component Library](https://dev.to/alexeagleson/how-to-create-and-publish-a-react-component-library-2oe)
+
+- [How to use IndexedDB to Store Local Data for your Web App ](https://dev.to/alexeagleson/how-to-use-indexeddb-to-store-data-for-your-web-application-in-the-browser-1o90)
+
+- [Running a Local Web Server](https://dev.to/alexeagleson/understanding-the-modern-web-stack-running-a-local-web-server-4d8g)
+
+- [ESLint](https://dev.to/alexeagleson/understanding-the-modern-web-stack-linters-eslint-59pm)
+
+- [Prettier](https://dev.to/alexeagleson/understanding-the-modern-web-stack-prettier-214j)
+
+- [Babel](https://dev.to/alexeagleson/building-a-modern-web-stack-babel-3hfp)
+
+- [React & JSX](https://dev.to/alexeagleson/understanding-the-modern-web-stack-react-with-and-without-jsx-31c7)
+
+- [Webpack: The Basics](https://dev.to/alexeagleson/understanding-the-modern-web-stack-webpack-part-1-2mn1)
+
+- [Webpack: Loaders, Optimizations & Bundle Analysis](https://dev.to/alexeagleson/understanding-the-modern-web-stack-webpack-part-2-49bj)
+
+---
+
+For more tutorials like this, follow me <a href="https://twitter.com/eagleson_alex?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">@eagleson_alex</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> on Twitter
