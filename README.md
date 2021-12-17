@@ -1,15 +1,63 @@
-This tutorial requires yarn v1.22
+
+All code from this tutorial as a complete package is available in [this repository](https://github.com/alexeagleson/monorepo-example).
+
+The purpose of this tutorial is to learn about some of the different ways that you can structure a large project that is built from multiple smaller projects.
+
+### Monorepos
+
+One method of grouping code from multiple projects into one is called a [monorepo](https://en.wikipedia.org/wiki/Monorepo).  A _monorepo_ is simply the practice of placing multiple different projects that are related in some way into the same repository.
+
+The biggest benefit is that you do not need to worry about version mismatch issues between the different pieces of your project.  If you update an API route in the server of your monorepo, that commit will be associated with the version of the front end that consumes it.  With two different repositories you could find yourself in a situation where your v1.2 front-end is asking for data from your v1.1 backend that somebody forgot to push the latest update for.
+
+Another big benefit is the ability to import and share code and modules between projects.  Sharing types between the back-end and front-end is a common use case.  Your can define the shape of the data on your server and have the front-end consume it in a typesafe way.  
+
+### Git Submodules
+
+In addition to monorepos, we also have the concept of [submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+
+Let's say that we want to add a feature to our app that we have in another separate project.  We don't want to move the entire project into our monorepo because it remains useful as its own independent project.  Other developers will continue  to work on it outside of our monorepo project.
+
+We would like a way to include that project inside our monorepo, but not create a separate copy.  Simply have the ability to pull the most recent changes from the original repository, or even make our own contributions to it from inside our monorepo.  Git submodules allows you to do exactly that.
+
+This tutorial will teach you how to create your own project that implements both of these features.
+
+## Table of Contents
+
+1. [Prerequisites and Setup](#prerequisites-and-setup)
+1. [Initializing the Project](#initializing-the-project)
+1. [Create the React App](#create-the-react-app)
+1. [Create the Monorepo](#create-the-monorepo)
+1. [Create Your Repository](#create-y0our-repository)
+1. [Sharing Code and Adding Dependencies](#sharing-code-and-adding-dependencies)
+1. [Add a Git Submodule](#add-a-git-submodule)
+1. [Wrapping Up](#wrapping-up)
+
+## Prerequisites and Setup
+
+This tutorial assumes you have a basic familiarity with the following.  Beginner level experience is fine for most as the code can be simply copy/pasted.  For git you should know how to clone, pull, commit and push.
+
+- Git
+- React
+- Node.js
+- Typescript
+- NPM
+
+This tutorial requires yarn v1 installed (we use v1.22).  
+
+## Initializing the Project
+
+To start, we need a `packages` directory to hold the different projects in our monorepo.  Your structure should begin looking like this:
+
+
+```
+.
+└── packages
+    └── simple-express-app
+          └── server.ts
+      
+From within the `packages/simple-express-app` directory, run:
 
 ```bash
-
-mkdir packages
-
-cd packages
-
-mkdir simple-express-server
-
-cd simple-express-server
-
 yarn init
 
 yarn add express
@@ -29,7 +77,7 @@ The final command will create a `tsconfig.json` file.  Add the following to it:
 }
 ```
 
-Then create your server file:
+Now create your server file if you haven't yet:
 
 `packages/simple-express-server/server.ts`
 
@@ -85,7 +133,7 @@ Open your browser to [](http://localhost:3001/) and you will see your data succe
 
 ![Express Data](https://res.cloudinary.com/dqse2txyi/image/upload/v1639709686/blogs/git-submodules/express-data_i45ghb.png)
 
-## React App
+## Create the React App
 
 Next we move onto our React app.  Navigate to the `packages` directory and run this command:
 
@@ -159,13 +207,7 @@ Before you continue take a moment to verify your project structure:
         └── [default setup]
 ```
 
-## Create a Monorepo
-
-A [monorepo](https://en.wikipedia.org/wiki/Monorepo) is simply the practice of placing multiple different projects that are related in some way into the same repository.
-
-The biggest benefit is that you do not need to worry about version mismatch issues between the different pieces of your project.  If you update an API route in the server of your monorepo, that commit will be associated with the version of the front end that consumes it.  With two different repositories you could find yourself in a situation where your v1.2 front-end is asking for data from your v1.1 backend that somebody forgot to push the latest update for.
-
-Another big benefit is the ability to import and share code and modules between projects.  Sharing types between the back-end and front-end is a common use case.  Your can define the shape of the data on your server and have the front-end consume it in a typesafe way.  
+## Create the Monorepo
 
 To manage our monorepo we are going to use two tools:
 
@@ -304,9 +346,16 @@ This is also a good time to commit your new project to your repository.  I'll be
 
 Note that in order to learn submodules effectively, we are going to be adding a submodule from a repository that _already exists_, we don't want to use the one that `create-react-app` generated automatically.  
 
-So for that reason I am going to delete the that repository by deleting the `.git` directory inside `packages/simple-react-app`.
+**So for that reason I am going to delete the that repository by deleting the `.git` directory inside `packages/simple-react-app`.  This step is VERY IMPORTANT.  Make sure there is no `.git` directory inside `simple-react-app`.**
 
-_(If you delete it, you'll get a warning and asked if you want to create it as a submodule when you try and commit and push your changes from the root directory)_
+Now from the root directory you can run:
+
+```bash
+git add .
+git commit -am 'first commit'
+git remote add origin YOUR_GIT_REPO_ADDRESS
+git push -u origin YOUR_BRANCH_NAME
+```
 
 ## Sharing Code and Adding Dependencies
 
@@ -424,13 +473,11 @@ Notice the snake_case response that matches the correct shape we defined.  Fanta
 
 Let's look at git submodules.  
 
-## Git Submodules
-
-Let's say that we want to add a feature to our app that we have in another separate project.
+## Add a Git Submodule
 
 Recently I wrote a blog post on a very simple component for a React app that adds a dark mode, a `<DarkMode />` component.  The component is not part of a separate library we can install with an NPM command, it exists as part of a React application that has its own repository.
 
-We can clone that repository inside of our React application as what's called a [submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  Let's take a look at how:
+Let's add it to our project, while still keeping it as its own separated repo that can be updated and managed independent of our monorepo.  
 
 From the `packages/simple-react-app/src` directory we'll run this command:
 
