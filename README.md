@@ -34,6 +34,7 @@ This tutorial will teach you how to create your own project that implements both
 1. [Sharing Code and Adding Dependencies](#sharing-code-and-adding-dependencies)
 1. [Create a Shared Package](#create-a-shared-package)
 1. [Add a Git Submodule](#add-a-git-submodule)
+1. [Namespacing](#namespacing)
 1. [Wrapping Up](#wrapping-up)
 
 ## Prerequisites and Setup
@@ -666,9 +667,41 @@ or
 git clone --recurse-submodules
 ```
 
+## Namespacing
+
+Although I didn't use it in the tutorial, it is good practice to use namespacing for your packages.  This is commonly done by prefixing with the `@` character.  Below I will quickly show how to update this tutorial to add a `@my-namespace` namespace:
+
+Prefix the `name` value in each of your three `package.json` files with `@my-namespace`.  For example `simple-express-server/package.json` will now be:
+
+```json
+{
+  "name": "@my-namespace/simple-express-server",
+  ...
+}
+```
+
+Do that for each of the three packages.
+
+Next you need to update your imports:
+
+`packages/simple-express-server/server.ts`
+```ts
+import { QueryPayload } from '@my-namespace/simple-shared-data';
+...
+```
+
+`packages/simple-react-app/src/App.tsx`
+```tsx
+import { QueryPayload } from '@my-namespace/simple-shared-data';
+...
+```
+
+Finally run `yarn install` to update those packages inside your root `node_modules` directory and you're good to go!
+
+
 ## Wrapping Up
 
-I hope you learned something useful about monorepos and submodules.  THere are tons of different ways to setup a new project, and there's no one-size-fits-all answer for every team.
+I hope you learned something useful about monorepos and submodules.  There are tons of different ways to setup a new project, and there's no one-size-fits-all answer for every team.
 
 I'd encourage you to play around with small monorepos (even clone this example) and get get comfortable with the different commands.  
 

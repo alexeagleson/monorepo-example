@@ -1,5 +1,5 @@
 {
-  "name": "simple-express-server",
+  "name": "@my-namespace/simple-express-server",
   "version": "1.0.0",
   "main": "dist/server.js",
   "license": "MIT",

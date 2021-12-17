@@ -1,5 +1,5 @@
 {
-  "name": "simple-shared-data",
+  "name": "@my-namespace/simple-shared-data",
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "Alex Eagleson <alexeagleson@gmail.com>",
