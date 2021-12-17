@@ -141,7 +141,7 @@ export default App;
 
 When we open the browser's development console (F12) and then click our button, we will see our server data fetched and logged in the browser:
 
-![React Fetch Example](https://res.cloudinary.com/dqse2txyi/image/upload/v1639709686/blogs/git-submodules/express-data_i45ghb.png)
+![React Fetch Example](https://res.cloudinary.com/dqse2txyi/image/upload/v1639711081/blogs/git-submodules/react-fetch_x3iqd8.png)
 
 This is great!  We've accidentally created a template for a full stack React and Typescript app!  But that's not the reason we're here, so let's start pushing further into scenarios we might encounter in real projects that would lead us to consider options like a monorepo and git submodules.
 
@@ -440,4 +440,67 @@ git submodule add git@github.com:alexeagleson/react-dark-mode.git
 
 That will create the `react-dark-mode` directory (the name of the git repository, you can add another argument after the above command to name the directory yourself).
 
+To import from the submodule it's as simple as... importing from the directory.  If we're going to add the `<DarkMode />` component it's as simple as adding:
 
+`packages/simple-react-app/src/App.tsx`
+```tsx
+...
+import DarkMode from "./react-dark-mode/src/DarkMode";
+
+function App() {
+  return (
+    <div className="App">
+      ...
+      <DarkMode />
+    </div>
+  );
+}
+
+export default App;
+```
+
+I've omitted some of the repetitive stuff above.  Unfortunately the default `background-color` styles in `App.css` are going to override the `body` styles, so we need to update `App.css` for it to work:
+
+`packages/simple-react-app/src/App.css`
+```css
+...
+
+.App-header {
+  /* background-color: #282c34; */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  /* color: white; */
+}
+
+.App-link {
+  /* color: #61dafb; */
+}
+
+...
+```
+
+Comment out those color values and you're good to go!
+
+![React Submodule Import Example](https://res.cloudinary.com/dqse2txyi/image/upload/v1639720663/blogs/git-submodules/react-submodule-import_cmdsk3.png)
+
+Now you might be thinking -- couldn't I just have cloned that repo into that folder and done this?  What's the difference with submodules?
+
+Well now that we have this in place, let's look for the answer to exactly that.  Run the following command:
+
+```bash
+git status
+```
+
+In the output you'll see `new file:   ../../../.gitmodules`.  That's something new if you've never used submodules before.  It's a hidden file that has been added to the project root.  Let's take a look inside it:
+
+```gitmodules
+[submodule "packages/simple-react-app/src/react-dark-mode"]
+	path = packages/simple-react-app/src/react-dark-mode
+	url = git@github.com:alexeagleson/react-dark-mode.git
+```
+
+It stores a mapping to the directories in our project that map to other repositories.  

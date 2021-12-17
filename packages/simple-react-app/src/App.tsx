@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import _ from "lodash";
 import { QueryPayload } from "simple-express-server/server";
+import DarkMode from "./react-dark-mode/src/DarkMode";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         >
           GET SOME DATA
         </button>
+        <DarkMode />
       </header>
     </div>
   );
