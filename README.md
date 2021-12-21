@@ -1,4 +1,6 @@
-All code from this tutorial as a complete package is available in [this repository](https://github.com/alexeagleson/monorepo-example).
+All code from this tutorial as a complete package is available in [this repository](https://github.com/alexeagleson/monorepo-example) and a video version of this tutorial is available below:
+
+{% youtube McEc5yX6kf4 %}
 
 Do you work with large or semi-large codebases that are starting to get out of control?  Do you have to deal with multiple different projects that interact with each other and have difficulty keeping versions aligned?  
 
@@ -89,7 +91,7 @@ Now create your server file if you haven't yet:
 `packages/simple-express-server/server.ts`
 
 ```ts
-const express = require("express");
+import express from 'express';
 const app = express();
 const port = 3001;
 
