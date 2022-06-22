@@ -305,7 +305,7 @@ node_modules/
 dist/
 ```
 
-_(If you're using VS Code you'll see the folder names in the side bar go grey as soon as you sae the file, so you know it worked)_
+_(If you're using VS Code you'll see the folder names in the side bar go grey as soon as you save the file, so you know it worked)_
 
 Verify your monorepo and workspaces are setup properly by running (from the root folder):
 
